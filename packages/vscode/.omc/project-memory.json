@@ -1,0 +1,154 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1775524153682,
+  "projectRoot": "/Users/jwang/Documents/Workspace/openchamber/packages/vscode",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "tsconfig.json"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "react",
+        "version": "19.1.1",
+        "category": "frontend"
+      },
+      {
+        "name": "react-dom",
+        "version": "19.1.1",
+        "category": "frontend"
+      },
+      {
+        "name": "esbuild",
+        "version": "0.24.2",
+        "category": "build"
+      },
+      {
+        "name": "vite",
+        "version": "7.1.2",
+        "category": "build"
+      }
+    ],
+    "packageManager": "npm",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": "npm run build",
+    "testCommand": null,
+    "lintCommand": "npm run lint",
+    "devCommand": "npm run dev",
+    "scripts": {
+      "vscode:prepublish": "bun run build",
+      "build": "bun run build:extension && bun run build:webview",
+      "build:extension": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --minify --main-fields=module,main",
+      "build:webview": "VITE_OPENCODE_URL=/api vite build",
+      "dev": "concurrently -n \"ext,web\" -c \"cyan,magenta\" \"bun run watch:extension\" \"bun run dev:webview\"",
+      "dev:webview": "vite --host localhost --port 5173 --strictPort",
+      "watch:extension": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch --sourcemap --main-fields=module,main",
+      "watch:webview": "vite build --watch",
+      "type-check": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.webview.json",
+      "lint": "bunx eslint --ext .ts,.tsx src webview",
+      "package": "vsce package --no-dependencies"
+    }
+  },
+  "conventions": {
+    "namingStyle": "camelCase/PascalCase",
+    "importStyle": "ES modules",
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "assets",
+      "src"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "assets": {
+      "path": "assets",
+      "purpose": "Static assets",
+      "fileCount": 3,
+      "lastAccessed": 1775524153669,
+      "keyFiles": [
+        "app-icon.png",
+        "icon-titlebar.svg",
+        "icon.svg"
+      ]
+    },
+    "dist": {
+      "path": "dist",
+      "purpose": "Distribution/build output",
+      "fileCount": 2,
+      "lastAccessed": 1775524153669,
+      "keyFiles": [
+        "extension.js",
+        "extension.js.map"
+      ]
+    },
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 34,
+      "lastAccessed": 1775524153670,
+      "keyFiles": [
+        "AgentManagerPanelProvider.ts",
+        "ChatViewProvider.ts",
+        "DOCUMENTATION.md",
+        "SessionEditorPanelProvider.ts",
+        "bridge-config-runtime.ts"
+      ]
+    },
+    "webview": {
+      "path": "webview",
+      "purpose": null,
+      "fileCount": 3,
+      "lastAccessed": 1775524153673,
+      "keyFiles": [
+        "index.html",
+        "main.tsx",
+        "tsconfig.json"
+      ]
+    },
+    "webview/api": {
+      "path": "webview/api",
+      "purpose": "API routes",
+      "fileCount": 12,
+      "lastAccessed": 1775524153673,
+      "keyFiles": [
+        "bridge.ts",
+        "editor.ts",
+        "files.ts"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "src",
+      "accessCount": 2,
+      "lastAccessed": 1775525959895,
+      "type": "directory"
+    }
+  ],
+  "userDirectives": []
+}

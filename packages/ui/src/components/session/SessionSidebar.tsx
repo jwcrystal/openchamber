@@ -894,6 +894,7 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
     createFolder,
     addSessionToFolder,
     cleanupSessions,
+    deleteFolder,
   });
 
   // Keep last-known repo status to avoid UI jiggling during project switch

@@ -1,0 +1,62 @@
+{
+  "sessions": {
+    "ses_29a6b7ed7ffePVTWkBF93Vj0cq": {
+      "sessionId": "ses_29a6b7ed7ffePVTWkBF93Vj0cq",
+      "createdAt": 1775525724484
+    },
+    "ses_29a63b8f6ffeqLHVs64T5gG3mx": {
+      "sessionId": "ses_29a63b8f6ffeqLHVs64T5gG3mx",
+      "createdAt": 1775526233887
+    },
+    "ses_293f1925fffeXHV9dM2bUePdhV": {
+      "sessionId": "ses_293f1925fffeXHV9dM2bUePdhV",
+      "createdAt": 1775634378159
+    },
+    "ses_293f12995ffeS1ShpPOCjjtgSI": {
+      "sessionId": "ses_293f12995ffeS1ShpPOCjjtgSI",
+      "createdAt": 1775634404983
+    },
+    "ses_293ed7217ffeC8kCEGGsK3prQe": {
+      "sessionId": "ses_293ed7217ffeC8kCEGGsK3prQe",
+      "createdAt": 1775634648568
+    },
+    "ses_293cfcd51ffe05UQCpl8otIVwN": {
+      "sessionId": "ses_293cfcd51ffe05UQCpl8otIVwN",
+      "createdAt": 1775636591300
+    },
+    "ses_293cea3dfffeUhRj7xAk6lmQoO": {
+      "sessionId": "ses_293cea3dfffeUhRj7xAk6lmQoO",
+      "createdAt": 1775636667447
+    },
+    "ses_2929fce45ffeStPWPXzWGPy0xe": {
+      "sessionId": "ses_2929fce45ffeStPWPXzWGPy0xe",
+      "createdAt": 1775656514003
+    },
+    "ses_2929f9ef8ffe0Xji1eGLKPV1D1": {
+      "sessionId": "ses_2929f9ef8ffe0Xji1eGLKPV1D1",
+      "createdAt": 1775656526105,
+      "branch": "fix/archived-folder-delete",
+      "worktreePath": "/Users/jwang/Documents/Workspace/openchamber/.opencode/worktrees/fix/archived-folder-delete"
+    },
+    "ses_2929f419affelwSwTAh7bJWjkE": {
+      "sessionId": "ses_2929f419affelwSwTAh7bJWjkE",
+      "createdAt": 1775656550011
+    },
+    "ses_2929f417bffeh4Mi1SAo3hqIsb": {
+      "sessionId": "ses_2929f417bffeh4Mi1SAo3hqIsb",
+      "createdAt": 1775656550042
+    },
+    "ses_2929e7016ffe497nBrGw852PCf": {
+      "sessionId": "ses_2929e7016ffe497nBrGw852PCf",
+      "createdAt": 1775656603648
+    },
+    "ses_29299ed46ffe2F1nL6Rvp1MbcR": {
+      "sessionId": "ses_29299ed46ffe2F1nL6Rvp1MbcR",
+      "createdAt": 1775656899277
+    },
+    "ses_29248efadffee4KQWM9ldWM6k3": {
+      "sessionId": "ses_29248efadffee4KQWM9ldWM6k3",
+      "createdAt": 1775662207078
+    }
+  }
+}

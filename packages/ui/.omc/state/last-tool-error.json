@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"GIT_SEQUENCE_EDITOR=\\\"perl -i -pe 's/^pick (92bd772c[0-9a-f]*)/reword $1 if $_ =~ /^pick $1/'\\\" git rebase -i HEAD~3\",\"description\":\"使用 perl 修改 rebase\"}",
+  "error": "Exit code 1\nsyntax error at -e line 1, at EOF\nExecution of -e aborted due to compilation errors.\nerror: there was a problem with the editor 'perl -i -pe 's/^pick (92bd772c[0-9a-f]*)/reword  if HEAD~3 =~ /^pick /''",
+  "timestamp": "2026-04-08T08:42:22.646Z",
+  "retry_count": 6
+}

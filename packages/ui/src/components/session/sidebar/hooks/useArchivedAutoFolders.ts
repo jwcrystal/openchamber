@@ -24,6 +24,7 @@ type Args = {
   createFolder: (scopeKey: string, name: string, parentId?: string | null) => FolderEntry;
   addSessionToFolder: (scopeKey: string, folderId: string, sessionId: string) => void;
   cleanupSessions: (scopeKey: string, existingSessionIds: Set<string>) => void;
+  deleteFolder?: (scopeKey: string, folderId: string) => void;
 };
 
 const getArchivedSessionsForProject = (
@@ -69,6 +70,7 @@ export const useArchivedAutoFolders = (args: Args): void => {
     createFolder,
     addSessionToFolder,
     cleanupSessions,
+    deleteFolder,
   } = args;
 
   React.useEffect(() => {
@@ -103,7 +105,28 @@ export const useArchivedAutoFolders = (args: Args): void => {
         }
       });
 
+      // Clean up sessions first
       cleanupSessions(scopeKey, sessionIds);
+
+      // Then clean up empty folders (only for archived scopes with no sessions)
+      const currentFolders = foldersMap[scopeKey] ?? [];
+      if (currentFolders.length > 0 && projectArchivedSessions.length === 0 && scopeKey.startsWith('__archived__:')) {
+        // Delete all folders in this archived scope when there are no archived sessions
+        // This prevents showing empty "project root" folders that confuse users
+        console.log('[useArchivedAutoFolders] Auto-cleaning empty archived folders:', {
+          scopeKey,
+          folderCount: currentFolders.length,
+          folderNames: currentFolders.map(f => f.name),
+        });
+        if (deleteFolder) {
+          currentFolders.forEach((folder) => {
+            console.log('[useArchivedAutoFolders] Deleting folder:', folder.name);
+            deleteFolder(scopeKey, folder.id);
+          });
+        } else {
+          console.error('[useArchivedAutoFolders] deleteFolder is not available!');
+        }
+      }
     });
   }, [
     normalizedProjects,
@@ -116,5 +139,6 @@ export const useArchivedAutoFolders = (args: Args): void => {
     createFolder,
     addSessionToFolder,
     cleanupSessions,
+    deleteFolder,
   ]);
 };

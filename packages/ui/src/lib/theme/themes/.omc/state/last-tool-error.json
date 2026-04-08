@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"git fetch origin && git rebase origin/main\",\"description\":\"Rebase 到 origin/main\"}",
+  "error": "Exit code 1\nFrom github.com:openchamber/openchamber\n   6dc9ae4d..66796343  main                    -> origin/main\n * [new branch]        feature/expose-magic-prompts -> origin/feature/expose-magic-prompts\n * [new branch]        feature/ngrok-tunnel-v1 -> origin/feature/ngrok-tunnel-v1\n * [new branch]        fix/lsp-diagnostics-tool-output -> origin/fix/lsp-diagnostics-tool-output\nerror: cannot rebase: You have unstaged changes.\nerror: Please commit or stash them.",
+  "timestamp": "2026-04-07T01:29:57.281Z",
+  "retry_count": 1
+}

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/jwang/**)",
+      "Bash(find:*)",
+      "Bash(gh issue:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
