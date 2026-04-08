@@ -325,12 +325,16 @@ export function SessionGroupSection(props: Props): React.ReactNode {
             }}
             onDelete={() => {
               if (group.isArchivedBucket) {
-                // Delete sessions in the folder
-                // Empty folders are auto-hidden by useArchivedAutoFolders
-                sessionEvents.requestDelete({
-                  sessions: folderSessionsForDelete,
-                  mode: 'session',
-                });
+                if (folderSessionsForDelete.length > 0) {
+                  sessionEvents.requestDelete({
+                    sessions: folderSessionsForDelete,
+                    mode: 'session',
+                  });
+                }
+                // Also delete the folder itself so it doesn't linger when empty
+                if (folderScopeKey) {
+                  deleteFolder(folderScopeKey, folder.id);
+                }
                 return;
               }
               if (!folderScopeKey) return;
