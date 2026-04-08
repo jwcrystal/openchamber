@@ -615,7 +615,7 @@ export function SessionGroupSection(props: Props): React.ReactNode {
             ) : null}
           </div>
         </div>
-        {group.isArchivedBucket && allGroupSessions.length > 0 ? (
+        {group.isArchivedBucket ? (
           <div className={cn('absolute right-0.5 top-1/2 -translate-y-1/2 z-10 transition-opacity', mobileVariant ? 'opacity-100' : 'opacity-0 group-hover/gh:opacity-100 group-focus-within/gh:opacity-100')}>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -623,11 +623,13 @@ export function SessionGroupSection(props: Props): React.ReactNode {
                   type="button"
                   onClick={(event) => {
                     event.stopPropagation();
-                    sessionEvents.requestDelete({
-                      sessions: allGroupSessions,
-                      mode: 'session',
-                      archivedBucket: group.isArchivedBucket,
-                    });
+                    if (allGroupSessions.length > 0) {
+                      sessionEvents.requestDelete({
+                        sessions: allGroupSessions,
+                        mode: 'session',
+                        archivedBucket: group.isArchivedBucket,
+                      });
+                    }
                   }}
                   className="inline-flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground hover:text-destructive hover:bg-interactive-hover/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
                   aria-label={`Delete archived sessions in ${group.label}`}
@@ -635,7 +637,7 @@ export function SessionGroupSection(props: Props): React.ReactNode {
                   <RiDeleteBinLine className="h-4 w-4" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={4}><p>Delete archived sessions</p></TooltipContent>
+              <TooltipContent side="bottom" sideOffset={4}><p>{allGroupSessions.length > 0 ? 'Delete archived sessions' : 'No sessions to delete'}</p></TooltipContent>
             </Tooltip>
           </div>
         ) : null}
