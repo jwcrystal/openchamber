@@ -47,6 +47,7 @@ type DeleteDialogState = {
     dateLabel?: string;
     mode: 'session' | 'worktree';
     worktree?: WorktreeMetadata | null;
+    archivedBucket?: boolean;
 };
 
 export const SessionDialogs: React.FC = () => {
@@ -164,12 +165,13 @@ export const SessionDialogs: React.FC = () => {
         startAccessing,
     ]);
 
-    const openDeleteDialog = React.useCallback((payload: { sessions: Session[]; dateLabel?: string; mode?: 'session' | 'worktree'; worktree?: WorktreeMetadata | null }) => {
+    const openDeleteDialog = React.useCallback((payload: { sessions: Session[]; dateLabel?: string; mode?: 'session' | 'worktree'; worktree?: WorktreeMetadata | null; archivedBucket?: boolean }) => {
         setDeleteDialog({
             sessions: payload.sessions,
             dateLabel: payload.dateLabel,
             mode: payload.mode ?? 'session',
             worktree: payload.worktree ?? null,
+            archivedBucket: payload.archivedBucket ?? false,
         });
     }, []);
 
@@ -223,7 +225,7 @@ export const SessionDialogs: React.FC = () => {
     React.useEffect(() => {
         return sessionEvents.onDeleteRequest((payload) => {
             if (!showDeletionDialog && (payload.mode ?? 'session') === 'session') {
-                void deleteSessionsWithoutDialog(payload);
+                void deleteSessionsWithoutDialog({ ...payload, archivedBucket: payload.archivedBucket ?? false });
                 return;
             }
             openDeleteDialog(payload);
@@ -406,6 +408,90 @@ export const SessionDialogs: React.FC = () => {
         if (!deleteDialog) {
             return;
         }
+        setIsProcessingDelete(true);
+
+        try {
+            const shouldArchive = shouldArchiveWorktree;
+            const removeRemoteBranch = shouldArchive && deleteDialogShouldRemoveRemote;
+            const deleteLocalBranch = shouldArchive && deleteDialogShouldDeleteLocalBranch;
+            const isArchivedBucketDelete = deleteDialog.archivedBucket === true;
+
+            if (deleteDialog.sessions.length === 0 && isWorktreeDelete && deleteDialog.worktree) {
+                const removed = await removeSelectedWorktree(deleteDialog.worktree, deleteLocalBranch);
+                if (!removed) {
+                    closeDeleteDialog();
+                    return;
+                }
+                const shouldRemoveRemote = deleteDialogShouldRemoveRemote && canRemoveRemoteBranches;
+                const archiveNote = shouldRemoveRemote ? 'Worktree and remote branch removed.' : 'Worktree removed.';
+                toast.success('Worktree removed', {
+                    description: renderToastDescription(archiveNote),
+                });
+                closeDeleteDialog();
+                return;
+            }
+
+            if (deleteDialog.sessions.length === 1) {
+                const target = deleteDialog.sessions[0];
+                const success = isWorktreeDelete
+                    ? await archiveSession(target.id)
+                    : isArchivedBucketDelete
+                        ? await deleteSession(target.id, {
+                            // For archived bucket sessions, perform hard delete
+                            archiveWorktree: false,
+                            deleteRemoteBranch: false,
+                            deleteLocalBranch: false,
+                        })
+                        : await deleteSession(target.id, {
+                            // In "worktree" mode, remove selected worktree explicitly below.
+                            // Don't try to derive worktree removal from per-session metadata (may be missing).
+                            archiveWorktree: false,
+                            deleteRemoteBranch: removeRemoteBranch,
+                            deleteLocalBranch,
+                        });
+                if (!success) {
+                    toast.error(isWorktreeDelete ? 'Failed to archive session' : isArchivedBucketDelete ? 'Failed to delete session' : 'Failed to archive session');
+                    setIsProcessingDelete(false);
+                    return;
+                }
+                const archiveNote = !isWorktreeDelete && shouldArchive
+                    ? removeRemoteBranch
+                        ? 'Worktree and remote branch removed.'
+                        : 'Attached worktree archived.'
+                    : undefined;
+                toast.success(isWorktreeDelete ? 'Session archived' : isArchivedBucketDelete ? 'Session deleted' : 'Session archived', {
+                    description: renderToastDescription(archiveNote),
+                    action: {
+                        label: 'OK',
+                        onClick: () => { },
+                    },
+                });
+            } else {
+                const ids = deleteDialog.sessions.map((session) => session.id);
+                let deletedIds: string[] = [];
+                let failedIds: string[] = [];
+                if (isWorktreeDelete) {
+                    const result = await archiveSessions(ids);
+                    deletedIds = result.archivedIds;
+                    failedIds = result.failedIds;
+                } else if (isArchivedBucketDelete) {
+                    // For archived bucket sessions, perform hard delete
+                    const result = await deleteSessions(ids, {
+                        archiveWorktree: false,
+                        deleteRemoteBranch: false,
+                        deleteLocalBranch: false,
+                    });
+                    deletedIds = result.deletedIds;
+                    failedIds = result.failedIds;
+                } else {
+                    const result = await deleteSessions(ids, {
+                        archiveWorktree: false,
+                        deleteRemoteBranch: removeRemoteBranch,
+                        deleteLocalBranch,
+                    });
+                    deletedIds = result.deletedIds;
+                    failedIds = result.failedIds;
+                }
         setIsProcessingDelete(true);
 
         try {

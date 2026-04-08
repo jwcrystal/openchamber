@@ -622,6 +622,7 @@ export function SessionGroupSection(props: Props): React.ReactNode {
                     sessionEvents.requestDelete({
                       sessions: allGroupSessions,
                       mode: 'session',
+                      archivedBucket: group.isArchivedBucket,
                     });
                   }}
                   className="inline-flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground hover:text-destructive hover:bg-interactive-hover/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
