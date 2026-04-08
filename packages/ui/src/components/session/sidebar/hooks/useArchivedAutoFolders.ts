@@ -108,23 +108,26 @@ export const useArchivedAutoFolders = (args: Args): void => {
       // Clean up sessions first
       cleanupSessions(scopeKey, sessionIds);
 
-      // Then clean up empty folders (only for archived scopes with no sessions)
+      // Then clean up empty folders in archived scopes
       const currentFolders = foldersMap[scopeKey] ?? [];
-      if (currentFolders.length > 0 && projectArchivedSessions.length === 0 && scopeKey.startsWith('__archived__:')) {
-        // Delete all folders in this archived scope when there are no archived sessions
-        // This prevents showing empty "project root" folders that confuse users
-        console.log('[useArchivedAutoFolders] Auto-cleaning empty archived folders:', {
-          scopeKey,
-          folderCount: currentFolders.length,
-          folderNames: currentFolders.map(f => f.name),
-        });
-        if (deleteFolder) {
+      if (currentFolders.length > 0 && scopeKey.startsWith('__archived__:')) {
+        if (projectArchivedSessions.length === 0) {
+          // No archived sessions at all — delete all folders
+          if (deleteFolder) {
+            currentFolders.forEach((folder) => {
+              deleteFolder(scopeKey, folder.id);
+            });
+          }
+        } else if (deleteFolder) {
+          // Delete folders that have no sessions after cleanup
+          const activeFolderNames = new Set(
+            projectArchivedSessions.map((s) => resolveArchivedFolderName(s, project.normalizedPath).toLowerCase()),
+          );
           currentFolders.forEach((folder) => {
-            console.log('[useArchivedAutoFolders] Deleting folder:', folder.name);
-            deleteFolder(scopeKey, folder.id);
+            if (folder.sessionIds.length === 0 && !activeFolderNames.has(folder.name.toLowerCase())) {
+              deleteFolder(scopeKey, folder.id);
+            }
           });
-        } else {
-          console.error('[useArchivedAutoFolders] deleteFolder is not available!');
         }
       }
     });
